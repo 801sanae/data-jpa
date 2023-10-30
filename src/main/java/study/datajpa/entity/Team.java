@@ -22,7 +22,7 @@ public class Team {
     private String name;
     //FK가 없는쪽에?
     @OneToMany(mappedBy = "team")
-    @JoinColumn(name = "member_id")
+//    @JoinColumn(name = "member_id")
     private List<Member> members = new ArrayList<>();
 
     public Team(String name){
