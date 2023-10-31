@@ -1,7 +1,11 @@
 package study.datajpa.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
@@ -10,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
+//public interface MemberRepository extends Repository<Member, Long> {
     //JpaRepository<Entity, PK의 type>
 
     List<Member> findByUsernameAndAgeGreaterThan(String username, int age); //메소드 이름을 분석해서 JPQL을 생성하고 실행
@@ -36,5 +41,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m from Member m where m.username in :names")
     List<Member> findByNames(@Param("names") List<String> names);
 
+/*
+    Page<Member> findByUsername(String name, Pageable pageable); // count 쿼리 사용 count쿼리 결과를 포함하는 페이징, count 쿼리 사용
+    Slice<Member> findByUsername(String name, Pageable pageable); // count 쿼리 사용 안함
+    List<Member> findByUsername(String name, Pageable pageable); // count 쿼리 사용 안함
+    List<Member> findByUsername(String, Sort sort); // 정렬기능
+*/
+    Page<Member> findByAge(int age, Pageable pageable);
 
 }
