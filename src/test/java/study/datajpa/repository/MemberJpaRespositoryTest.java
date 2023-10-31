@@ -77,4 +77,31 @@ class MemberJpaRespositoryTest {
         assertThat(result.get(0).getAge()).isEqualTo(10);
         assertThat(result.size()).isEqualTo(1);
     }
+
+    @Test
+    public void paging() throws Exception{
+        //given
+        memberJpaRespository.save(new Member("member1", 10));
+        memberJpaRespository.save(new Member("member2", 10));
+        memberJpaRespository.save(new Member("member3", 10));
+        memberJpaRespository.save(new Member("member4", 10));
+        memberJpaRespository.save(new Member("member5", 10));
+
+        int age = 10;
+        int offset = 0;
+        int limit = 3;
+
+        //when
+        List<Member> members = memberJpaRespository.findByPage(age, offset, limit);
+        long totalcount = memberJpaRespository.totalCount(age);
+
+        //페이지 계산 공식 적용...
+        // totalPage = totalCount / size ...
+        // 마지막 페이지 ... // 최초 페이지 ..
+
+        //then
+        assertThat(members.size()).isEqualTo(3);
+        assertThat(totalcount).isEqualTo(5);
+
+    }
 }
