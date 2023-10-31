@@ -7,6 +7,7 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     //JpaRepository<Entity, PK의 type>
@@ -14,7 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findByUsernameAndAgeGreaterThan(String username, int age); //메소드 이름을 분석해서 JPQL을 생성하고 실행
 
 //    @Query(name = "Member.findByUsername")
-    List<Member> findByUsername(@Param("username") String name);
+    List<Member> findByUsername(@Param("username") String name); //Collection return
 
     //실행할 메서드에 정적 쿼리를 직접 작성하므로 이름 없는 Named 쿼리라 할 수 있음
 
@@ -29,8 +30,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select m from Member m where m.username = :name") // 위치 기반
 //    @Query("select m from Member m where m.username = ?0") // 이름 기반
-    Member findMembers(@Param("name") String username);
+//    Member findMembers(@Param("name") String username); // 단건 return
+    Optional<Member> findMembers(@Param("name") String username); // optional return
 
     @Query("select m from Member m where m.username in :names")
     List<Member> findByNames(@Param("names") List<String> names);
+
+
 }
