@@ -53,4 +53,20 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 //    Slice<Member> findByAge(int age, Pageable pageable); // TotalCount Query X
 //List<Member> findByAge(int age, Pageable pageable); // List로도 반환가능
 
+/*
+ * 1. springboot 3.0 이상은 hibernate 6 적용 -> 의미없는 left join 최적화 -> 아래와 같은 경우 SQL left join 하지않음.
+    @Query(value = "select m from Member m left join m.team t")
+    Page<Member> findByAge(int age, Pageable pageable);
+
+ * 2. Member 와 Team 을 조인을 하지만 사실 이 쿼리를 Team 을 전혀 사용하지 않는다.
+ *    select 절이나, where 절에서 사용하지 않는다.
+ *    결국 select m from Member m 과 다를께 없음.
+
+ * 3. JPA가 최적화해버림. join없이 SQL생성함.
+
+ * 4. 그럼에도 member, team을 원쿼리로 조회하고 싶다면, fetch join 사용..
+ * select m from Member m left join fetch m.Team t
+
+
+*/
 }
