@@ -18,3 +18,14 @@ logging:
   level:
     org.hibernate.sql: debug # ??? logger? ?? ?????? ?? SQL? ???.
 #    org.hibernate.type: trace
+server:
+  port: 48080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  endpoint:
+    prometheus:
+      enabled: true
