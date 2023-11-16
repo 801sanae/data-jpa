@@ -47,6 +47,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findByUsername(String name, Pageable pageable); // count 쿼리 사용 안함
     List<Member> findByUsername(String, Sort sort); // 정렬기능
 */
-    Page<Member> findByAge(int age, Pageable pageable);
+    @Query(value = "select m from Member m",
+            countQuery = "select count(m) from Member m")// count query 분리 가능,,
+    Page<Member> findByAge(int age, Pageable pageable); // count 쿼리 포함하는 페이징
+//    Slice<Member> findByAge(int age, Pageable pageable); // TotalCount Query X
+//List<Member> findByAge(int age, Pageable pageable); // List로도 반환가능
 
 }

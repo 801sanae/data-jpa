@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 
 import java.util.List;
@@ -69,15 +71,27 @@ class MemberRepositoryTest {
         //when
         PageRequest pageRequest = PageRequest.of(0,3,Sort.by(Sort.Direction.DESC, "username"));
         Page<Member> page = memberRepository.findByAge(10, pageRequest);
+//        Slice<Member> page = memberRepository.findByAge(10, pageRequest); (limit+1) offset
+//        List<Member> page = memberRepository.findByAge(10, pageRequest);
+
+        // *** Entity를 반환 X -> EntityDTO를 통해 반환하자. ***
+        Page<MemberDto> toMap = page.map(member -> new MemberDto(member.getId(), member.getUsername(), null));
+
+//        List<MemberDto> contentDto = toMap.getContent();
+//        contentDto.size();
+//        toMap.getTotalElements();
+//        toMap.getTotalPages();
+
 
         //then
-        List<Member> content = page.getContent(); //조회된 데이터
-        assertThat(content.size()).isEqualTo(3);
-        assertThat(page.getTotalElements()).isEqualTo(5);
-        assertThat(page.getNumber()).isEqualTo(0);
-        assertThat(page.getTotalPages()).isEqualTo(2);
-        assertThat(page.isFirst()).isTrue();
-        assertThat(page.hasNext()).isTrue();
+        List<Member> content = page.getContent(); // 조회된 데이터
+        assertThat(content.size()).isEqualTo(3); // 조건의로 가져온값의 size
+
+        assertThat(page.getTotalElements()).isEqualTo(5); // 조회된 데이터의 Total Count
+        assertThat(page.getNumber()).isEqualTo(0); //페이지번호
+        assertThat(page.getTotalPages()).isEqualTo(2); //전체 페이지 번호
+        assertThat(page.isFirst()).isTrue(); // 첫번쨰페이지인가?
+        assertThat(page.hasNext()).isTrue(); // 다음페이지가 있나?
 
 
     }
