@@ -1,5 +1,7 @@
 package study.datajpa.repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 //@Rollback(value = false)
 class MemberRepositoryTest {
     @Autowired MemberRepository memberRepository;
+
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     public void testMember(){
@@ -94,5 +99,23 @@ class MemberRepositoryTest {
         assertThat(page.hasNext()).isTrue(); // 다음페이지가 있나?
 
 
+    }
+
+    @Test
+    public void builUpdate(){
+        //given
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 19));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 41));
+
+        //then
+        int resultCount = memberRepository.bulkAgePlus(20);
+        //벌크 연산 후 영속성 flush, clear 필요..
+        em.flush();
+        em.clear();
+
+        assertThat(resultCount).isEqualTo(3);
     }
 }
