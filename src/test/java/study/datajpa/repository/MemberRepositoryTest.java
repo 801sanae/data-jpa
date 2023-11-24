@@ -13,6 +13,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
+import study.datajpa.entity.Team;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 //@Rollback(value = false)
 class MemberRepositoryTest {
     @Autowired MemberRepository memberRepository;
+    @Autowired TeamRepository teamRepository;
 
     @PersistenceContext
     EntityManager em;
@@ -117,5 +119,32 @@ class MemberRepositoryTest {
         em.clear();
 
         assertThat(resultCount).isEqualTo(3);
+    }
+
+    @Test
+    public void findMemberLazy(){
+      //given
+//      member1 -> teamA
+//      member2 -> teamB
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+        memberRepository.save(new Member("member1", 10, teamA));
+        memberRepository.save(new Member("member2", 20, teamB));
+        em.flush();
+        em.clear();
+
+        //when
+//        List<Member> members = memberRepository.findAll(); // 1. N+1 문제 발생,,
+//        List<Member> members = memberRepository.findMemberFetchJoin(); // 2. fetch join을 하게 되면 proxy객체가 아닌 실제 Team claa로 채운다.
+        List<Member> members = memberRepository.findAll(); // 3. entity graph 사용시 내부적 fetch Join 사용?!
+//N+1,, -> fetch join
+        for (Member m : members){
+            System.out.println("member = " + m.getUsername());
+            System.out.println("member teamclass= " + m.getTeam().getClass()); // 일단 proxy객체로 대체한다.
+            System.out.println("member team= " + m.getTeam().getName()); // 이떄 team에 대한 쿼리가 실행된다.
+        }
+
     }
 }

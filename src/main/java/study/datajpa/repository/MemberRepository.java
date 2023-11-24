@@ -3,6 +3,7 @@ package study.datajpa.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,7 +22,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findByUsernameAndAgeGreaterThan(String username, int age); //메소드 이름을 분석해서 JPQL을 생성하고 실행
 
 //    @Query(name = "Member.findByUsername")
-    List<Member> findByUsername(@Param("username") String name); //Collection return
+//    List<Member> findByUsername(@Param("username") String name); //Collection return
 
     //실행할 메서드에 정적 쿼리를 직접 작성하므로 이름 없는 Named 쿼리라 할 수 있음
 
@@ -73,4 +74,25 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying(clearAutomatically = true)//<- 이 쿼리 이후 clear 실행...
     @Query("update Member m set m.age = m.age + 1 where m.age >= :age")
     int bulkAgePlus(@Param("age") int age);
+
+
+//n+1 -> fetch join
+// member, team,, proxy team객체, 사용할떄 다시 team 관련 쿼리가 실행된다. <--- N+1 문제
+    @Query("select m from Member m left join fetch m.team")
+    List<Member> findMemberFetchJoin();
+
+    @Override
+    @EntityGraph(attributePaths = {"team"})
+    List<Member> findAll();
+
+    //JPQL + 엔티티 그래프
+    @EntityGraph(attributePaths = {"team"})
+    @Query("select m from Member m")
+    List<Member> findMemberEntityGraph();
+
+    //메서드 이름으로 쿼리에서 특히 편리하다.
+    // fetch join은 left outer join이 기본,,이라함
+    //entity graph <- jpa 표준스펙? @NameEntityGraph
+    @EntityGraph(attributePaths = {"team"})
+    List<Member> findByUsername(String username);
 }
