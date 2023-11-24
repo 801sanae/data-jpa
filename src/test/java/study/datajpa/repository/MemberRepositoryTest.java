@@ -138,7 +138,7 @@ class MemberRepositoryTest {
         //when
 //        List<Member> members = memberRepository.findAll(); // 1. N+1 문제 발생,,
 //        List<Member> members = memberRepository.findMemberFetchJoin(); // 2. fetch join을 하게 되면 proxy객체가 아닌 실제 Team claa로 채운다.
-        List<Member> members = memberRepository.findAll(); // 3. entity graph 사용시 내부적 fetch Join 사용?!
+        List<Member> members = memberRepository.findByUsername(); // 3. entity graph 사용시 내부적 fetch Join 사용?!
 //N+1,, -> fetch join
         for (Member m : members){
             System.out.println("member = " + m.getUsername());
