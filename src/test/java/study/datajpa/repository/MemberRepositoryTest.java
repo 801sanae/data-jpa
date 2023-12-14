@@ -184,6 +184,12 @@ class MemberRepositoryTest {
 
         //when
         List<Member> result = memberRepository.findLockByUsername("member1"); //select for update
+        result.get(0).setUsername("member2");
 
+    }
+
+    @Test
+    public void callCustom(){
+        List<Member> restult = memberRepository.findMemberCustom();
     }
 }

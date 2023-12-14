@@ -12,7 +12,7 @@ import study.datajpa.entity.Member;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long> , MemberRepositoryCustom{
 //public interface MemberRepository extends Repository<Member, Long> {
     //JpaRepository<Entity, PK의 type>
 
@@ -95,7 +95,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     //hibernate에서 제공
     @QueryHints(value = @QueryHint(name = "org.hibernate.readOnly",  value = "true")) // <- 최적화,, Snapshot 안만듬
-    Member findReadOnlyByUserName(String username);
+    Member findReadOnlyByUsername(String username);
 
     //select for update? LOCK
     //java persistence
