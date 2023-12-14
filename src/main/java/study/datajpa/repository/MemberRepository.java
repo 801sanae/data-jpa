@@ -1,13 +1,9 @@
 package study.datajpa.repository;
 
+import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
@@ -94,5 +90,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // fetch join은 left outer join이 기본,,이라함
     //entity graph <- jpa 표준스펙? @NameEntityGraph
     @EntityGraph(attributePaths = {"team"})
-    List<Member> findByUsername(String username);
+    List<Member> findByUsername();
+
+    //hibernate에서 제공
+    @QueryHints(value = @QueryHint(name = "org.hibernate.readOnly",  value = "true")) // <- 최적화,, Snapshot 안만듬
+    Member findReadOnlyByUserName(String username);
 }

@@ -147,4 +147,31 @@ class MemberRepositoryTest {
         }
 
     }
+
+    @Test
+    public void queryhint(){
+        /*
+            //given
+            Member member1 = memberRepository.save(new Member("member1", 10));
+            em.flush();
+            em.clear(); //<- 영속성 캐시 삭제
+
+            //when
+            Member findMember = memberRepository.findById(member1.getId()).get(); // 원본과, 변경 두가지를 가지고 있다.
+            findMember.setUsername("member2"); // 변경감지 update..
+
+            em.flush();; // 상태체크, dirty cheking 변경감지,,,
+         */
+        //given
+        Member member1 = memberRepository.save(new Member("member1", 10));
+        em.flush();
+        em.clear();
+
+        //when
+        Member readOnlyByUserName = memberRepository.findReadOnlyByUserName("member1");
+        readOnlyByUserName.setUsername("member2");
+
+        em.flush(); //<-readOnly true라서 최적화,, 변경감지가 안됨.
+
+    }
 }
