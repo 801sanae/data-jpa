@@ -168,7 +168,7 @@ class MemberRepositoryTest {
         em.clear();
 
         //when
-        Member readOnlyByUserName = memberRepository.findReadOnlyByUserName("member1");
+        Member readOnlyByUserName = memberRepository.findReadOnlyByUsername("member1");
         readOnlyByUserName.setUsername("member2");
 
         em.flush(); //<-readOnly true라서 최적화,, 변경감지가 안됨.
