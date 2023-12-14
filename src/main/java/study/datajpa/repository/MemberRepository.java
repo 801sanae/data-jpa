@@ -1,5 +1,6 @@
 package study.datajpa.repository;
 
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -95,4 +96,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     //hibernate에서 제공
     @QueryHints(value = @QueryHint(name = "org.hibernate.readOnly",  value = "true")) // <- 최적화,, Snapshot 안만듬
     Member findReadOnlyByUserName(String username);
+
+    //select for update? LOCK
+    //java persistence
+    //JPA가 제공하는 Annotation을 통해 사용 가능.
+    //Transation , Lock 책 참고,,
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    List<Member> findLockByUsername(String username);
 }
