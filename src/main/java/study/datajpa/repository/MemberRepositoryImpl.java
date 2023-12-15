@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * packageName    : study.datajpa.repository
- * fileName       : MemberImp
+ * fileName       : MemberRepositoryImpl
  * author         : kmy
  * date           : 12/14/23
  * description    :
@@ -18,7 +18,7 @@ import java.util.List;
  * 12/14/23        kmy       최초 생성
  */
 @RequiredArgsConstructor
-public class MemberImp implements MemberRepositoryCustom{
+public class MemberRepositoryImpl implements MemberRepositoryCustom{
 
     private final EntityManager em;
 
