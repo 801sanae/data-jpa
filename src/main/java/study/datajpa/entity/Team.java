@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of={"id","name"}) // 연관관계 필드는 뺴주는게 좋다? 순환참조같이?
-public class Team {
+public class Team extends JpaBaseEntity{
 
     @Id
     @GeneratedValue
