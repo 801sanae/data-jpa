@@ -27,13 +27,11 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class) // orm.xml,,, JPA Spec ,,, gloable 적용, 굳이,
-public class BaseEntity extends BaseTimeEntity{
+public class BaseTimeEntity {
 
-    @CreatedBy
+    @CreatedDate
     @Column(updatable = false)
-    private String createBy;
-
-    @LastModifiedBy
-    private String lastModifiedBy;
-
+    private LocalDateTime createDate;
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
 }
