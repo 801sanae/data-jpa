@@ -112,4 +112,33 @@ public interface MemberRepository extends JpaRepository<Member, Long> , MemberRe
 
 //Generic 가능,
     <T> List<T> findProjectionsByUsername(@Param("username") String username, Class<T> type);
+
+//Native Query...최후에...
+//반환타입의 애매한부분이있다.
+//Entity 자제를 가져오는 경우가 아닌,, DTO , 또는 여러가지 테이블의 조인성등등..
+//@Query(value = "select username from member where username = ?", nativeQuery = true) <-- username에 대한 반환타입이 애매함.
+//sort파라미터도 정상독작이 안됨..
+//application loading 시점 문법확인이 안됨,,
+//동적쿼리도 안됨.
+    @Query(value = "select * from member where username = ?", nativeQuery = true)
+    Member findByNativeQuery(String username);
+
+
+    //정적쿼리일 경우나 ,,
+    //DTO Projections
+    @Query(value = "select m.member_id as id, m.username, t.name as teamName from member m left join team t"
+            , countQuery = "select count(*) from member"
+            , nativeQuery = true)
+    Page<MemberProjection> findByNativeProjection(Pageable pagable);
+
+    //동적쿼리는 하이버네이트 기능 사용할 수 있다.,, jdbcTemplate , mybatis, jooq 사용권장..
+//    String sql = "select m.username as username from member m";
+//    List<MemberDto> result = em.createNativeQuery(sql)
+//            .setFirstResult(0)
+//            .setMaxResults(10)
+//            .unwrap(NativeQuery.class)
+//            .addScalar("username")
+//            .setResultTransformer(Transformers.aliasToBean(MemberDto.class))
+//            .getResultList();
+
 }
