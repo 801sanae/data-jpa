@@ -265,10 +265,18 @@ class MemberRepositoryTest {
         em.clear();
 
         //when
-        List<UsernameOnlyDto> result = memberRepository.findProjectionsByUsername("m1", UsernameOnlyDto.class);
+        //동적
+//        List<UsernameOnlyDto> result = memberRepository.findProjectionsByUsername("m1", UsernameOnlyDto.class);
+        List<NestedCloseProjections> result = memberRepository.findProjectionsByUsername("m1", NestedCloseProjections.class);
 
-        for(UsernameOnlyDto usernameOnlyDto : result){
-            System.out.println("usernameOnly : " + usernameOnlyDto.getUsername());
+//        for(UsernameOnlyDto usernameOnlyDto : result){
+//            System.out.println("usernameOnly : " + usernameOnlyDto.getUsername());
+//        }
+
+        for(NestedCloseProjections nestedCloseProjections : result){
+            System.out.println("username : " + nestedCloseProjections.getUsername());
+            System.out.println("username teamName: " + nestedCloseProjections.getTeam().getName());
+
         }
     }
 }
