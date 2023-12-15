@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,7 +57,7 @@ public class MemberController {
      *   로 해당Pagable에 대한 정보를 나눌수 있다.
      */
     @GetMapping("/members")
-    public Page<Member> list(@PageableDefault(size = 5) Pageable pageable){
+    public Page<Member> list(@PageableDefault(size = 4, direction = Sort.Direction.DESC, page = 1, sort = {"id"}) Pageable pageable){
 
         return memberRepository.findAll(pageable);
     }
