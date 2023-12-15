@@ -9,6 +9,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.repository.MemberRepository;
 
@@ -57,9 +58,18 @@ public class MemberController {
      *   로 해당Pagable에 대한 정보를 나눌수 있다.
      */
     @GetMapping("/members")
-    public Page<Member> list(@PageableDefault(size = 4, direction = Sort.Direction.DESC, page = 1, sort = {"id"}) Pageable pageable){
+    public Page<MemberDto> list(@PageableDefault(size = 4, direction = Sort.Direction.DESC, sort = {"id"}) Pageable pageable){
+        // 내부설계유출개념,, entity는 노출하지말자 entity -> dto
+// #1
+//        Page<Member> page = memberRepository.findAll(pageable);
+//        Page<MemberDto> memberDtos = page.map(member -> new MemberDto(member.getId(), member.getUsername(), null));
+//        return memberDtos;
 
-        return memberRepository.findAll(pageable);
+// #2
+//        return memberRepository.findAll(pageable).map(member -> new MemberDto(member.getId(), member.getUsername(), null));
+
+// #3
+        return memberRepository.findAll(pageable).map(MemberDto::new);
     }
 
 

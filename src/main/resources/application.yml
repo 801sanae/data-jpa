@@ -26,6 +26,8 @@ spring:
       pageable:
         default-page-size: 10
         max-page-size: 2000
+        # index parameter start 1 ( default 0 ) Pagable , Page의 값이 다름,,
+        one-indexed-parameters: true
 
 
 logging:
